@@ -21,11 +21,11 @@
 #     [X]Append Board
 #     [X]Display Board with Player Change
 #     [X]Get this to loop until board is full
-#     []Add method to check for wins in .. board? class
-#     []Add method to check for draws
+#     [X]Add method to check for wins in engine
+#     [X]Add method to check for draws
 #     [X]Add Valid Move Checker
-#     [X]Add A list for available winning positions 
-#     []Return Winning player name
+#     [X]Add A list for available winning positions
+#     [X]Return Winning player name
 #     []
 #     []
 #
@@ -33,13 +33,16 @@
 #
 #
 
+# Phase 2
+
+# Game class will be the game "engine"
 class Game
   def initialize
     @board = Board.new
     @player1 = Player.new('Player Uno', 'x')
     @player2 = Player.new('Player Zwei', 'o')
 
-    @current_player = @player2
+    @current_player = @player1
   end
 
   def swap_player
@@ -49,16 +52,33 @@ class Game
   def play_game
     puts 'Game Started'
     @board.display_board
-    until @board.full?
-        player_choice = 0
-        loop do
-            player_choice = @current_player.player_input
-            break if @board.valid_choice(player_choice)
-        end
+    until draw?
+      player_choice = 0
+      loop do
+        player_choice = @current_player.player_input
+        break if @board.valid_choice(player_choice)
+      end
       @board.add_token(player_choice - 1, @current_player.token)
       @board.display_board
-      
+      break if win?
+
       swap_player
+    end
+  end
+
+  def win?
+    if @board.player_win?(@current_player.token)
+      puts "#{@current_player.name} wins!"
+      true
+    else
+      false
+    end
+  end
+
+  def draw?
+    if @board.full?
+      puts 'Tie'
+      true
     end
   end
 end
@@ -77,7 +97,7 @@ class Player
 end
 
 class Board
-    WINS = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 9]]
+  WINS = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 9]].freeze
   def initialize
     @board = Array(1..9)
   end
@@ -87,7 +107,17 @@ class Board
   end
 
   def full?
-    @board.all? {|i| i.to_i == 0}
+    @board.all? { |i| i.to_i.zero? }
+  end
+
+  def player_win?(token)
+    WINS.any? do |win|
+      first_token = @board[win[0]]
+      second_token = @board[win[1]]
+      third_token = @board[win[2]]
+
+      token == first_token && token == second_token && token == third_token
+    end
   end
 
   def valid_choice(choice)
@@ -110,6 +140,7 @@ end
 game = Game.new
 game.play_game
 
+# PHASE 1
 # def print_board(board)
 #     puts "\t \t|\t \t|"
 #     puts "\t#{board[0]}\t|\t#{board[1]}\t|\t#{board[2]}"
