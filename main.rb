@@ -24,8 +24,8 @@
 #     []Add method to check for wins in .. board? class
 #     []Add method to check for draws
 #     [X]Add Valid Move Checker
-#     []
-#     []
+#     [X]Add A list for available winning positions 
+#     []Return Winning player name
 #     []
 #     []
 #
@@ -57,6 +57,7 @@ class Game
         end
       @board.add_token(player_choice - 1, @current_player.token)
       @board.display_board
+      
       swap_player
     end
   end
@@ -76,6 +77,7 @@ class Player
 end
 
 class Board
+    WINS = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 9]]
   def initialize
     @board = Array(1..9)
   end
