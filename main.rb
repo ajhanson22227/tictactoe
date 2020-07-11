@@ -20,10 +20,10 @@
 #     [X]Get User Input for Current Player (Player 1 begins)
 #     [X]Append Board
 #     [X]Display Board with Player Change
-#     []Get this to loop until board is full
+#     [X]Get this to loop until board is full
 #     []Add method to check for wins in .. board? class
 #     []Add method to check for draws
-#     []
+#     [X]Add Valid Move Checker
 #     []
 #     []
 #     []
@@ -49,13 +49,15 @@ class Game
   def play_game
     puts 'Game Started'
     @board.display_board
-    @count = 0
-    until @count == 10
-      player_choice = @current_player.player_input
-      @board.add_token(player_choice, @current_player.token)
+    until @board.full?
+        player_choice = 0
+        loop do
+            player_choice = @current_player.player_input
+            break if @board.valid_choice(player_choice)
+        end
+      @board.add_token(player_choice - 1, @current_player.token)
       @board.display_board
       swap_player
-      @count += 1
     end
   end
 end
@@ -69,7 +71,7 @@ class Player
 
   def player_input
     puts "What position do you choose, #{@name}"
-    gets.chomp.to_i - 1
+    gets.chomp.to_i
   end
 end
 
@@ -80,6 +82,14 @@ class Board
 
   def add_token(index, token)
     @board[index] = token
+  end
+
+  def full?
+    @board.all? {|i| i.to_i == 0}
+  end
+
+  def valid_choice(choice)
+    @board.include?(choice.to_i)
   end
 
   def display_board
