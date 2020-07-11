@@ -26,116 +26,16 @@
 #     [X]Add Valid Move Checker
 #     [X]Add A list for available winning positions
 #     [X]Return Winning player name
-#     []
-#     []
 #
-#
-#
-#
+#     Phase 3 - Moving classes to their own files
+#     [X] Moved Game class and main still works
+#     [] Moved Player class and main still works
+#     [] Moved Board class and main still works
 
 # Phase 2
 
-# Game class will be the game "engine"
-class Game
-  def initialize
-    @board = Board.new
-    @player1 = Player.new('Player Uno', 'x')
-    @player2 = Player.new('Player Zwei', 'o')
-
-    @current_player = @player1
-  end
-
-  def swap_player
-    @current_player = @current_player == @player1 ? @player2 : @player1
-  end
-
-  def play_game
-    puts 'Game Started'
-    @board.display_board
-    until draw?
-      player_choice = 0
-      loop do
-        player_choice = @current_player.player_input
-        break if @board.valid_choice(player_choice)
-      end
-      @board.add_token(player_choice - 1, @current_player.token)
-      @board.display_board
-      break if win?
-
-      swap_player
-    end
-  end
-
-  def win?
-    if @board.player_win?(@current_player.token)
-      puts "#{@current_player.name} wins!"
-      true
-    else
-      false
-    end
-  end
-
-  def draw?
-    if @board.full?
-      puts 'Tie'
-      true
-    end
-  end
-end
-
-class Player
-  attr_accessor :name, :token
-  def initialize(name, token)
-    @name = name
-    @token = token
-  end
-
-  def player_input
-    puts "What position do you choose, #{@name}"
-    gets.chomp.to_i
-  end
-end
-
-class Board
-  WINS = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 9]].freeze
-  def initialize
-    @board = Array(1..9)
-  end
-
-  def add_token(index, token)
-    @board[index] = token
-  end
-
-  def full?
-    @board.all? { |i| i.to_i.zero? }
-  end
-
-  def player_win?(token)
-    WINS.any? do |win|
-      first_token = @board[win[0]]
-      second_token = @board[win[1]]
-      third_token = @board[win[2]]
-
-      token == first_token && token == second_token && token == third_token
-    end
-  end
-
-  def valid_choice(choice)
-    @board.include?(choice.to_i)
-  end
-
-  def display_board
-    puts "\t \t|\t \t|"
-    puts "\t#{@board[0]}\t|\t#{@board[1]}\t|\t#{@board[2]}"
-    puts '________________|_______________|____________'
-    puts "\t \t|\t \t|"
-    puts "\t#{@board[3]}\t|\t#{@board[4]}\t|\t#{@board[5]}"
-    puts '________________|_______________|____________'
-    puts "\t \t|\t \t|"
-    puts "\t#{@board[6]}\t|\t#{@board[7]}\t|\t#{@board[8]}"
-    puts "\t \t|\t \t|"
-  end
-end
+require './game.rb'
+require './board.rb'
 
 game = Game.new
 game.play_game
