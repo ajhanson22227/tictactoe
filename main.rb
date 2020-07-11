@@ -2,7 +2,7 @@
 
 #     TIC-TAC-TOE
 #
-#     PHASE 1
+#     PHASE 1 - Loops and functions
 #     [X]we will want a board (array)
 #     [X]display board
 #     [X]ask for user position
@@ -12,51 +12,87 @@
 #     [X]display board
 #     [X]check for win / tie
 #
-#     PHASE 2
+#     PHASE 2 - Moving To Classes
 #     [X]Create Game Class
 #     [X]Create Player Class (Player Class will have a token and name)
 #     [X]Create Board Class?
-#     []Add Display Board Method to Game Class
+#     [X]Add Display Board Method to Game Class
+#     [X]Get User Input for Current Player (Player 1 begins)
+#     [X]Append Board
+#     [X]Display Board with Player Change
+#     []Get this to loop until board is full
+#     []Add method to check for wins in .. board? class
+#     []Add method to check for draws
 #     []
 #     []
 #     []
+#     []
+#     []
+#
+#
+#
+#
 
 class Game
   def initialize
+    @board = Board.new
     @player1 = Player.new('Player Uno', 'x')
     @player2 = Player.new('Player Zwei', 'o')
-    @board = Board.new
+
+    @current_player = @player2
+  end
+
+  def swap_player
+    @current_player = @current_player == @player1 ? @player2 : @player1
   end
 
   def play_game
     puts 'Game Started'
     @board.display_board
+    @count = 0
+    until @count == 10
+      player_choice = @current_player.player_input
+      @board.add_token(player_choice, @current_player.token)
+      @board.display_board
+      swap_player
+      @count += 1
+    end
   end
 end
 
 class Player
+  attr_accessor :name, :token
   def initialize(name, token)
     @name = name
     @token = token
   end
+
+  def player_input
+    puts "What position do you choose, #{@name}"
+    gets.chomp.to_i - 1
+  end
 end
 
 class Board
-    def initialize
-        @board = Array(1..9)
-    end
+  def initialize
+    @board = Array(1..9)
+  end
 
-    def display_board
-        puts "\t \t|\t \t|"
-        puts "\t#{@board[0]}\t|\t#{@board[1]}\t|\t#{@board[2]}"
-        puts "________________|_______________|____________"
-        puts "\t \t|\t \t|"
-        puts "\t#{@board[3]}\t|\t#{@board[4]}\t|\t#{@board[5]}"
-        puts "________________|_______________|____________"
-        puts "\t \t|\t \t|"
-        puts "\t#{@board[6]}\t|\t#{@board[7]}\t|\t#{@board[8]}"
-        puts "\t \t|\t \t|"
-    end
+  def add_token(index, token)
+    @board[index] = token
+  end
+
+  def display_board
+    puts "\t \t|\t \t|"
+    puts "\t#{@board[0]}\t|\t#{@board[1]}\t|\t#{@board[2]}"
+    puts '________________|_______________|____________'
+    puts "\t \t|\t \t|"
+    puts "\t#{@board[3]}\t|\t#{@board[4]}\t|\t#{@board[5]}"
+    puts '________________|_______________|____________'
+    puts "\t \t|\t \t|"
+    puts "\t#{@board[6]}\t|\t#{@board[7]}\t|\t#{@board[8]}"
+    puts "\t \t|\t \t|"
+  end
 end
 
 game = Game.new
