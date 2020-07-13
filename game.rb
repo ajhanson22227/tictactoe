@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require './player.rb'
+require './board.rb'
 
 # Game class will be the game "engine"
 class Game
@@ -18,6 +19,11 @@ class Game
   def play_game
     puts 'Game Started'
     @board.display_board
+    tic_tac_go
+    
+  end
+
+  def tic_tac_go
     until draw?
       player_choice = 0
       loop do
@@ -47,4 +53,4 @@ class Game
       true
     end
   end
-  end
+end
